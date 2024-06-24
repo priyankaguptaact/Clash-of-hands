@@ -1,1 +1,2 @@
 # Clash-of-hands
+Clash of Hands is a simple rock-paper-scissors game implemented in JavaScript. This project marks my initial exploration into JavaScript development, aimed at gaining a practical understanding of fundamental concepts and their application in a fun, interactive game setting.
