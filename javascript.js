@@ -1,52 +1,63 @@
-document.addEventListener("DOMContentLoaded", () => {
-    let humanScore = 0;
-    let computerScore = 0;
+let userScore = 0;
+let compScore = 0;
 
-    const choices = ["rock", "paper", "scissors"];
-    const buttons = document.querySelectorAll('.choice-button');
-    const resultMessage = document.getElementById('result-message');
-    const humanScoreDisplay = document.getElementById('human-score');
-    const computerScoreDisplay = document.getElementById('computer-score');
+const choices = document.querySelectorAll(".choice");
+const msg = document.querySelector("#msg");
 
-    function getComputerChoice() {
-        const randomIndex = Math.floor(Math.random() * choices.length);
-        return choices[randomIndex];
+const userScorePara = document.querySelector("#user-score");
+const compScorePara = document.querySelector("#comp-score");
+
+const genCompChoice = () => {
+  const options = ["rock", "paper", "scissors"];
+  const randIdx = Math.floor(Math.random() * 3);
+  return options[randIdx];
+};
+
+const drawGame = () => {
+  msg.innerText = "Game was Draw. Play again.";
+  msg.style.backgroundColor = "#081b31";
+};
+
+const showWinner = (userWin, userChoice, compChoice) => {
+  if (userWin) {
+    userScore++;
+    userScorePara.innerText = userScore;
+    msg.innerText = `You win! Your ${userChoice} beats ${compChoice}`;
+    msg.style.backgroundColor = "green";
+  } else {
+    compScore++;
+    compScorePara.innerText = compScore;
+    msg.innerText = `You lost. ${compChoice} beats your ${userChoice}`;
+    msg.style.backgroundColor = "red";
+  }
+};
+
+const playGame = (userChoice) => {
+  //Generate computer choice
+  const compChoice = genCompChoice();
+
+  if (userChoice === compChoice) {
+    //Draw Game
+    drawGame();
+  } else {
+    let userWin = true;
+    if (userChoice === "rock") {
+      //scissors, paper
+      userWin = compChoice === "paper" ? false : true;
+    } else if (userChoice === "paper") {
+      //rock, scissors
+      userWin = compChoice === "scissors" ? false : true;
+    } else {
+      //rock, paper
+      userWin = compChoice === "rock" ? false : true;
     }
+    showWinner(userWin, userChoice, compChoice);
+  }
+};
 
-    function playRound(humanChoice, computerChoice) {
-        if (humanChoice === computerChoice) {
-            return "tie";
-        } else if (
-            (humanChoice === "rock" && computerChoice === "scissors") ||
-            (humanChoice === "paper" && computerChoice === "rock") ||
-            (humanChoice === "scissors" && computerChoice === "paper")
-        ) {
-            return "human";
-        } else {
-            return "computer";
-        }
-    }
-
-    function updateScores(winner) {
-        if (winner === "human") {
-            humanScore++;
-            resultMessage.textContent = "You win this round!";
-        } else if (winner === "computer") {
-            computerScore++;
-            resultMessage.textContent = "Computer wins this round!";
-        } else {
-            resultMessage.textContent = "It's a tie!";
-        }
-        humanScoreDisplay.textContent = `Your Score: ${humanScore}`;
-        computerScoreDisplay.textContent = `Computer Score: ${computerScore}`;
-    }
-
-    buttons.forEach(button => {
-        button.addEventListener('click', () => {
-            const humanChoice = button.id;
-            const computerChoice = getComputerChoice();
-            const winner = playRound(humanChoice, computerChoice);
-            updateScores(winner);
-        });
-    });
+choices.forEach((choice) => {
+  choice.addEventListener("click", () => {
+    const userChoice = choice.getAttribute("id");
+    playGame(userChoice);
+  });
 });
